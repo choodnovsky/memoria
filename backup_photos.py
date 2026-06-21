@@ -10,7 +10,8 @@
   5. После успешной заливки хеш + метаданные пишутся в манифест.
 
 Настройка:
-  Все ключи/токены и пути берутся из файла .env
+  Все ключи/токены и пути берутся из файла .env (см. .env.example рядом со скриптом).
+  Скопируй .env.example в .env и заполни своими значениями.
 
 Запуск:
   python3 backup_photos.py                    # обычный запуск
@@ -44,7 +45,15 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 load_dotenv(os.path.join(SCRIPT_DIR, ".env"))
 
 TOKEN = os.environ.get("YADISK_TOKEN")
-SOURCE_DIR = os.environ.get("SOURCE_DIR")
+# Дефолт строится динамически от домашней папки текущего пользователя (~),
+# вместо хардкода конкретного имени пользователя в пути.
+_default_source_dir = os.path.join(
+    os.path.expanduser("~"),
+    "Pictures",
+    "Медиатека Фото.photoslibrary",
+    "originals",
+)
+SOURCE_DIR = os.path.expanduser(os.environ.get("SOURCE_DIR") or _default_source_dir)
 DISK_BASE_PATH = os.environ.get("DISK_BASE_PATH")
 MANIFEST_PATH = os.environ.get("MANIFEST_PATH")
 
